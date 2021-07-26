@@ -9,9 +9,20 @@ export const addArticle = article => {
 
 export const simulateHttpRequest = article => {
   return dispatch => {
-    setTimeout(() => {
-      dispatch(addArticle(article));
-    }, 3000);
+    fetch("http://localhost:3004/articles/", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(article)
+    })
+      .then((data) => {
+        data.json()
+          .then((article) => {
+            dispatch(addArticle(article));
+          })
+      })
   };
 };
 export const deleteArticleObjectCreator = article => {
@@ -22,9 +33,16 @@ export const deleteArticleObjectCreator = article => {
 };
 export const deleteArticle = article => {
   return dispatch => {
-    setTimeout(() => {
-      dispatch(deleteArticleObjectCreator(article));
-    }, 3000);
+    fetch(`http://localhost:3004/articles/${article.id}`, {
+      method: "DELETE",
+    })
+      .then((data) => {
+        data.json()
+          .then((article) => {
+            dispatch(deleteArticleObjectCreator(article));
+          })
+      })
+
   };
 };
 export const updateArticleObjectCreator = article => {
@@ -33,10 +51,39 @@ export const updateArticleObjectCreator = article => {
     article
   };
 };
+export const fetchUsersObjectCreator = articles => {
+  return {
+    type: actionTypes.ADD_ARTICLES,
+    articles
+  }
+}
 export const updateArticle = article => {
   return dispatch => {
-    setTimeout(() => {
-      dispatch(updateArticleObjectCreator(article));
-    }, 3000);
+    fetch(`http://localhost:3004/articles/${article.id}`, {
+      method: "PUT",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(article)
+    })
+      .then((data) => {
+        data.json()
+          .then((article) => {
+            dispatch(updateArticleObjectCreator(article));
+          })
+      })
+  };
+};
+export const fetchArticles = () => {
+  return dispatch => {
+    fetch("http://localhost:3004/articles/")
+      .then((data) => {
+        data.json()
+          .then((articles) => {
+            console.log(articles);
+            dispatch(fetchUsersObjectCreator(articles));
+          })
+      })
   };
 };

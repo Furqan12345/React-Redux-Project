@@ -1,11 +1,10 @@
-import { Button } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import "./AddArticle.css";
 
-const AddArticle = ({ saveArticle, updateArticle=null, updatedArticle={}, isUpdate=false }) => {
-  const [article, setArticle] = useState(updatedArticle);
+const AddArticle = ({ functionArticle, articleFields={}, buttonText="Add Article" }) => {
+  const [article, setArticle] = useState(articleFields);
   const handleArticleData = e => {
-    console.log("from add article",article);
+    console.log("from add article", article);
     setArticle({
       ...article,
       [e.target.id]: e.target.value
@@ -13,23 +12,9 @@ const AddArticle = ({ saveArticle, updateArticle=null, updatedArticle={}, isUpda
   };
   const addNewArticle = e => {
     e.preventDefault();
-    console.log("from add article",article);
-    if(isUpdate){
-      console.log("from add article",article);
-      updateArticle(article);
-    }
-    else{
-      console.log("from save add article",article);
-      saveArticle(article);
-    }
-    
-  };
-  useEffect(()=>{
-    if(isUpdate){
-      console.log("from add article",article);
-        setArticle(updatedArticle);
-    }
-  },[])
+    functionArticle(article);
+  }
+  
 
   return (
     <form onSubmit={addNewArticle} className="add-article">
@@ -49,7 +34,7 @@ const AddArticle = ({ saveArticle, updateArticle=null, updatedArticle={}, isUpda
       />
       <button type="submit">
         {
-          isUpdate ? <p>Update Article</p> : <p>Add Article</p>
+          <p>{buttonText}</p>
         }
       </button>
     </form>

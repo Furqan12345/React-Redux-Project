@@ -1,10 +1,8 @@
 import * as actionTypes from "./actionTypes";
 
 const initialState = {
-  articles: [
-    { id: 1, title: "post 1", body: "Quisque cursus, metus vitae pharetra" },
-    { id: 2, title: "post 2", body: "Quisque cursus, metus vitae pharetra" }
-  ]
+  isReloadArticles: false,
+  articles: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -17,28 +15,37 @@ const reducer = (state = initialState, action) => {
       };
       return {
         ...state,
+        isReloadArticles:!state.isReloadArticles,
         articles: state.articles.concat(newArticle)
       };
-      
+
+    case actionTypes.ADD_ARTICLES:
+      return {
+        ...state,
+        articles: action.articles
+      };
+
     case actionTypes.DELETE_ARTICLE:
       return {
         ...state,
+        isReloadArticles: !(state.isReloadArticles),
         // eslint-disable-next-line array-callback-return
-        articles: state.articles.filter((article)=>{
-          if(article.id !== action.article.id){
+        articles: state.articles.filter((article) => {
+          if (article.id !== action.article.id) {
             return article;
           }
         })
       }
-      case actionTypes.UPDATE_ARTICLE:
+    case actionTypes.UPDATE_ARTICLE:
       return {
         ...state,
+        isReloadArticles: !(state.isReloadArticles),
         // eslint-disable-next-line array-callback-return
-        articles: state.articles.map(x => (x.title === action.article.title ? { ...x, title: action.article.title, body:action.article.body } : x))
+        articles: state.articles.map(x => (x.title === action.article.title ? { ...x, title: action.article.title, body: action.article.body } : x))
       }
 
-      default:
-        return state;
+    default:
+      return state;
   }
 };
 export default reducer;
